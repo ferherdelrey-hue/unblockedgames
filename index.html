@@ -1,13 +1,244 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Arcade | Unblocked Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --arcade-black: #050505;
+            --arcade-neon: #00FF00;
+            --arcade-pink: #FF00FF;
+            --arcade-blue: #00FFFF;
+        }
 
+        body {
+            background-color: var(--arcade-black);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .brutal-border {
+            border: 2px solid white;
+            box-shadow: 4px 4px 0px 0px rgba(255,255,255,1);
+        }
+
+        .brutal-border-neon {
+            border: 2px solid var(--arcade-neon);
+            box-shadow: 4px 4px 0px 0px var(--arcade-neon);
+        }
+
+        .brutal-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            background-color: white;
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .brutal-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: none;
+        }
+
+        .game-card:hover .game-img {
+            filter: grayscale(0%);
+        }
+
+        .game-img {
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+
+        #game-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        #game-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 1100px;
+            height: 85vh;
+            background: #18181b;
+            display: flex;
+            flex-direction: column;
+        }
+
+        iframe {
+            width: 100%;
+            flex-grow: 1;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="border-b-2 border-white p-6 sticky top-0 bg-[#050505] z-40">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-[#00FF00] text-black brutal-border">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+                </div>
+                <div>
+                    <h1 class="text-4xl font-black italic leading-none">Nexus Arcade</h1>
+                    <p class="text-xs font-mono text-[#00FF00] uppercase tracking-widest mt-1">Unblocked & Unfiltered</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 flex-grow max-w-2xl">
+                <div class="relative flex-grow">
+                    <input type="text" id="search-input" placeholder="Search games..." class="w-full bg-zinc-900 border-2 border-white p-3 pl-4 focus:outline-none focus:border-[#00FF00] transition-colors font-mono text-white">
+                </div>
+                <button id="random-btn" class="brutal-btn whitespace-nowrap hidden sm:block">Random</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="p-6 max-w-7xl mx-auto w-full">
+        <div id="categories" class="flex flex-wrap items-center gap-3 mb-12">
+            <!-- Categories will be injected here -->
+        </div>
+
+        <div id="game-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <!-- Games will be injected here -->
+        </div>
+
+        <div id="no-results" class="hidden flex flex-col items-center justify-center py-24 text-zinc-500">
+            <p class="text-xl font-bold uppercase italic">No games found in the matrix</p>
+        </div>
+    </main>
+
+    <!-- Game Modal -->
+    <div id="game-modal">
+        <div class="modal-content brutal-border-neon">
+            <div class="flex items-center justify-between p-3 border-b-2 border-[#00FF00] bg-zinc-900">
+                <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <h2 id="modal-title" class="ml-2 text-lg font-bold text-[#00FF00]">Game Title</h2>
+                </div>
+                <button id="close-modal" class="p-1.5 hover:bg-red-500 text-zinc-400 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <iframe id="game-frame" src="" allow="autoplay; fullscreen; keyboard"></iframe>
+        </div>
+    </div>
+
+    <script>
+        let games = [];
+        let currentCategory = 'All';
+        let searchQuery = '';
+
+        async function init() {
+            try {
+                const response = await fetch('./src/games.json');
+                games = await response.json();
+                renderCategories();
+                renderGames();
+            } catch (err) {
+                console.error("Failed to load games:", err);
+            }
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categories');
+            const cats = ['All', ...new Set(games.map(g => g.category))];
+            
+            container.innerHTML = cats.map(cat => `
+                <button onclick="setCategory('${cat}')" class="px-4 py-1.5 font-bold uppercase text-sm transition-all ${currentCategory === cat ? 'bg-[#00FF00] text-black brutal-border-neon' : 'bg-zinc-900 text-zinc-400 border-2 border-transparent hover:border-zinc-700'}">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function renderGames() {
+            const grid = document.getElementById('game-grid');
+            const filtered = games.filter(g => {
+                const matchesSearch = g.title.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesCat = currentCategory === 'All' || g.category === currentCategory;
+                return matchesSearch && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                grid.classList.add('hidden');
+                document.getElementById('no-results').classList.remove('hidden');
+            } else {
+                grid.classList.remove('hidden');
+                document.getElementById('no-results').classList.add('hidden');
+                grid.innerHTML = filtered.map(g => `
+                    <div class="game-card group relative bg-zinc-900 brutal-border overflow-hidden flex flex-col h-full">
+                        <div class="relative aspect-video overflow-hidden border-b-2 border-white">
+                            <img src="${g.thumbnail}" alt="${g.title}" class="game-img w-full h-full object-cover">
+                            <div class="absolute top-2 left-2 px-2 py-0.5 bg-[#00FF00] text-black text-[10px] font-bold uppercase">${g.category}</div>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold mb-1 group-hover:text-[#00FF00] transition-colors">${g.title}</h3>
+                            <p class="text-zinc-400 text-sm mb-4 flex-grow">${g.description}</p>
+                            <button onclick="openGame('${g.id}')" class="brutal-btn w-full group-hover:bg-[#00FF00] transition-colors">Play Now</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            renderCategories();
+            renderGames();
+        }
+
+        function openGame(id) {
+            const game = games.find(g => g.id === id);
+            if (!game) return;
+            document.getElementById('modal-title').innerText = game.title;
+            document.getElementById('game-frame').src = game.iframeUrl;
+            document.getElementById('game-modal').classList.add('active');
+        }
+
+        document.getElementById('close-modal').onclick = () => {
+            document.getElementById('game-modal').classList.remove('active');
+            document.getElementById('game-frame').src = '';
+        };
+
+        document.getElementById('search-input').oninput = (e) => {
+            searchQuery = e.target.value;
+            renderGames();
+        };
+
+        document.getElementById('random-btn').onclick = () => {
+            const g = games[Math.floor(Math.random() * games.length)];
+            openGame(g.id);
+        };
+
+        init();
+    </script>
+</body>
+</html>

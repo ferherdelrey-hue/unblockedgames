@@ -196,7 +196,7 @@
                 grid.innerHTML = filtered.map(g => `
                     <div class="game-card group relative bg-zinc-900 brutal-border overflow-hidden flex flex-col h-full">
                         <div class="relative aspect-video overflow-hidden border-b-2 border-white">
-                            <img src="${g.thumbnail}" alt="${g.title}" class="game-img w-full h-full object-cover">
+                            <img src="${g.thumbnail}" alt="${g.title}" class="game-img w-full h-full object-cover" referrerPolicy="no-referrer">
                             <div class="absolute top-2 left-2 px-2 py-0.5 bg-[#00FF00] text-black text-[10px] font-bold uppercase">${g.category}</div>
                         </div>
                         <div class="p-4 flex flex-col flex-grow">

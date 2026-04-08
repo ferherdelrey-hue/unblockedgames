@@ -1,5 +1,13 @@
 [
   {
+    "id": "sniper-pixel-shooting",
+    "title": "Sniper Pixel Shooting",
+    "description": "Become a master sniper in this pixelated shooting challenge. Aim, shoot, and eliminate your targets.",
+    "thumbnail": "https://img.gamemonetize.com/7kntpx8lrkss1q9r0rogogwwgfdfix41/512x384.jpg",
+    "iframeUrl": "https://html5.gamemonetize.co/7kntpx8lrkss1q9r0rogogwwgfdfix41/",
+    "category": "Shooting"
+  },
+  {
     "id": "2048",
     "title": "2048",
     "description": "Join the numbers and get to the 2048 tile!",
